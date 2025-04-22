@@ -18,7 +18,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(ProductLoading());
     try {
       final data = await repository.getProduct();
-      List<String> imageUrlList = [];
       emit(ProductLoaded(data));
     } catch (e) {
       emit(ProductError(e.toString()));
