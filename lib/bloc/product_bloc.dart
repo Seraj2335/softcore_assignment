@@ -19,8 +19,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future<void> _onFetchData(FetchData event, Emitter<ProductState> emit) async {
     if (hasReachedMax) return;
-
-    // emit(ProductLoading());
     try {
       if (currentPage == 1) {
         emit(ProductLoading());

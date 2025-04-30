@@ -15,7 +15,7 @@ class ListViewPage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(body: BlocBuilder<ProductBloc, ProductState>(
-      builder: (context, state) {
+      builder:(context, state) {
         if (state is ProductInitial || state is ProductLoading) {
           return Center(
             child: CircularProgressIndicator(),
