@@ -8,16 +8,29 @@ import '../data/repositories/local_product_repository.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final LocalProductRepository repository;
 
+  List<Product> products = [];
+  int currentPage = 1;
+  bool hasReachedMax = false;
+
   ProductBloc({required this.repository}) : super(ProductInitial()) {
     on<FetchData>(_onFetchData);
     add(FetchData());
   }
 
   Future<void> _onFetchData(FetchData event, Emitter<ProductState> emit) async {
-    print('On Fetch Called');
-    emit(ProductLoading());
+    if (hasReachedMax) return;
+
+    // emit(ProductLoading());
     try {
-      final data = await repository.getProduct();
+      if (currentPage == 1) {
+        emit(ProductLoading());
+      } else {
+        emit(ProductLoadingMore(products: products));
+      }
+      final data = await repository.getProduct(currentPage, 10);
+      hasReachedMax = data.isEmpty;
+      products.addAll(data);
+      currentPage++;
       emit(ProductLoaded(data));
     } catch (e) {
       emit(ProductError(e.toString()));
@@ -48,6 +61,15 @@ abstract class ProductState extends Equatable {
 class ProductInitial extends ProductState {}
 
 class ProductLoading extends ProductState {}
+
+class ProductLoadingMore extends ProductState {
+  final List<Product> products;
+
+  const ProductLoadingMore({required this.products});
+
+  @override
+  List<Object> get props => [products];
+}
 
 class ProductLoaded extends ProductState {
   final List<Product> product;

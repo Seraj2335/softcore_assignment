@@ -18,7 +18,6 @@ class ListBlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('>>>>> ListBlocProviderCalled');
     return BlocProvider(
       create: (context) => ProductBloc(repository: repository),
       child: child,
